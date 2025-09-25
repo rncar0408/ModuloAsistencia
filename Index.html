@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <link rel="icon" href="/favicon.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>InscribCórdoba</title>
+
+  <!-- [ ESTILOS Y SCRIPTS EXTERNOS ] -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js"></script>
+  
+  <!-- [ LIBRERÍA SWEETALERT2 ] -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  
+  <!-- [ ESTILOS PROPIOS ] -->
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="maqueta-base.css">
+  
+  <style>
+    /* Estilos para los resultados de búsqueda en el modal */
+    .search-result-item {
+        padding: 8px 12px;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        margin-top: 8px;
+        cursor: pointer;
+        transition: background-color 0.2s;
+    }
+    .search-result-item:hover {
+        background-color: #f0f0f0;
+    }
+  </style>
+</head>
+
+<body>
+  <noscript>Debes habilitar JavaScript para correr esta aplicación.</noscript>
+  <div id="root">
+    <div class="MuiBox-root css-k008qs">
+      <!-- HEADER -->
+      <header class="MuiPaper-root MuiPaper-elevation MuiPaper-elevation4 MuiAppBar-root MuiAppBar-colorPrimary MuiAppBar-positionFixed mui-fixed css-yhtnad-MuiPaper-root-MuiAppBar-root">
+        <div class="MuiToolbar-root MuiToolbar-gutters MuiToolbar-regular css-u4fbkj-MuiToolbar-root">
+            <div class="MuiStack-root css-kdc3n8-MuiStack-root">
+                <button class="MuiButtonBase-root MuiIconButton-root MuiIconButton-colorInherit MuiIconButton-edgeStart MuiIconButton-sizeMedium css-cyuviz-MuiButtonBase-root-MuiIconButton-root" tabindex="0" type="button" aria-label="open drawer">
+                    <svg class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium css-i4bv87-MuiSvgIcon-root" focusable="false" aria-hidden="true" viewBox="0 0 24 24" data-testid="MenuIcon"><path d="M3 18h18v-2H3zm0-5h18v-2H3zm0-7v2h18V6z"></path></svg>
+                </button>
+                <div id="header-title" class="MuiTypography-root MuiTypography-h6 MuiTypography-noWrap css-1futezt-MuiTypography-root">Inicio</div>
+            </div>
+            <div class="MuiTypography-root MuiTypography-h5 MuiTypography-noWrap css-3qlp87-MuiTypography-root">InscribCórdoba</div>
+            <div class="MuiStack-root css-kdc3n8-MuiStack-root">
+                <p class="MuiTypography-root MuiTypography-body1 css-ktcnmi-MuiTypography-root">Hola, Roque Nicolás (ADM)</p>
+                <button class="MuiButtonBase-root MuiIconButton-root MuiIconButton-colorInherit MuiIconButton-sizeMedium css-zylse7-MuiButtonBase-root-MuiIconButton-root" tabindex="0" type="button" aria-label="Cerrar Sesión">
+                    <svg class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium css-i4bv87-MuiSvgIcon-root" focusable="false" aria-hidden="true" viewBox="0 0 24 24" data-testid="LogoutIcon"><path d="m17 7-1.41 1.41L18.17 11H8v2h10.17l-2.58 2.58L17 17l5-5zM4 5h8V3H4c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h8v-2H4z"></path></svg>
+                </button>
+            </div>
+        </div>
+      </header>
+      
+      <!-- SIDEBAR -->
+      <div class="MuiDrawer-root MuiDrawer-docked css-1wuajzb-MuiDrawer-docked">
+        <div class="MuiPaper-root MuiPaper-elevation MuiPaper-elevation0 MuiDrawer-paper MuiDrawer-paperAnchorLeft MuiDrawer-paperAnchorDockedLeft css-12i7wg6-MuiPaper-root-MuiDrawer-paper">
+            <div class="css-1kh1mwg"><h6 class="MuiTypography-root MuiTypography-h6 css-fr29x0-MuiTypography-root">Menú</h6></div>
+            <hr class="MuiDivider-root MuiDivider-fullWidth css-9mgopn-MuiDivider-root">
+            <ul class="MuiList-root MuiList-padding css-t2bf14-MuiList-root">
+                <li class="MuiListItem-root MuiListItem-gutters css-uxa1ks-MuiListItem-root">
+                    <div data-view="dashboard" class="MuiButtonBase-root MuiListItemButton-root MuiListItemButton-gutters Mui-selected css-13y6xhj-MuiButtonBase-root-MuiListItemButton-root" role="button">
+                        <div class="MuiListItemIcon-root css-d8d5vp-MuiListItemIcon-root"><svg class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium css-i4bv87-MuiSvgIcon-root" focusable="false" viewBox="0 0 24 24" data-testid="HouseIcon"><path d="M19 9.3V4h-3v2.6L12 3 2 12h3v8h5v-6h4v6h5v-8h3zm-9 .7c0-1.1.9-2 2-2s2 .9 2 2z"></path></svg></div>
+                        <div class="MuiListItemText-root"><span class="MuiTypography-root MuiTypography-body1 MuiListItemText-primary css-1vx5ons-MuiTypography-root">Inicio</span></div>
+                    </div>
+                </li>
+                <li class="MuiListItem-root MuiListItem-gutters css-uxa1ks-MuiListItem-root">
+                    <div data-view="courses" class="MuiButtonBase-root MuiListItemButton-root MuiListItemButton-gutters css-13y6xhj-MuiButtonBase-root-MuiListItemButton-root" role="button">
+                        <div class="MuiListItemIcon-root css-119wstx-MuiListItemIcon-root"><svg class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium css-i4bv87-MuiSvgIcon-root" focusable="false" viewBox="0 0 24 24" data-testid="AssessmentIcon"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2M9 17H7v-7h2zm4 0h-2V7h2zm4 0h-2v-4h2z"></path></svg></div>
+                        <div class="MuiListItemText-root"><span class="MuiTypography-root MuiTypography-body1 MuiListItemText-primary css-1xm7s47-MuiTypography-root">Cursos</span></div>
+                    </div>
+                </li>
+                 <li class="MuiListItem-root MuiListItem-gutters css-uxa1ks-MuiListItem-root">
+                    <div data-view="asistencia" class="MuiButtonBase-root MuiListItemButton-root MuiListItemButton-gutters css-13y6xhj-MuiButtonBase-root-MuiListItemButton-root" role="button">
+                        <div class="MuiListItemIcon-root css-119wstx-MuiListItemIcon-root"><svg class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium css-i4bv87-MuiSvgIcon-root" focusable="false" viewBox="0 0 24 24" data-testid="CheckBox"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-9 14-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"></path></svg></div>
+                        <div class="MuiListItemText-root"><span class="MuiTypography-root MuiTypography-body1 MuiListItemText-primary css-1xm7s47-MuiTypography-root">Asistencia</span></div>
+                    </div>
+                </li>
+            </ul>
+        </div>
+      </div>
+      
+      <!-- MAIN CONTENT -->
+      <main class="main-content css-lp2gju">
+          <section id="view-dashboard" class="view-container active">
+              <h1>¡Hola Roque Nicolás (ADM)!</h1>
+              <p>Usa el menú para navegar. Comienza por ir a "Cursos" para crear un nuevo evento o cohorte.</p>
+          </section>
+
+          <section id="view-courses" class="view-container">
+              <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: var(--spacing-3);">
+                  <h2>Gestión de Cohortes de Cursos</h2>
+                  <button id="create-course-btn" class="btn btn-primary"><i class="fas fa-plus"></i> Crear Nueva Cohorte</button>
+              </div>
+              <div class="card">
+                  <table id="course-list-table">
+                      <thead><tr><th>Nombre del Curso</th><th>Fecha</th><th>Inscriptos</th><th>Estado</th><th>Acciones</th></tr></thead>
+                      <tbody></tbody>
+                  </table>
+              </div>
+          </section>
+
+          <section id="view-course-detail" class="view-container">
+              <button class="btn btn-secondary" style="margin-bottom: 20px;" data-view="courses"><i class="fas fa-arrow-left"></i> Volver a la lista</button>
+              <h2 id="course-detail-title"></h2>
+              <p id="course-detail-date"></p>
+              <div class="card">
+                  <div class="tabs" id="course-detail-tabs">
+                      <div class="tab-item active" data-tab="details">Detalles y QR</div>
+                      <div class="tab-item" data-tab="attendees">Asistentes</div>
+                  </div>
+                  <div id="tab-details" class="tab-content active">
+                      <h3>Registro de Asistencia</h3>
+                      <p>Muestra este QR en la entrada del evento para tomar asistencia.</p>
+                      <button id="show-qr-btn" class="btn btn-primary"><i class="fas fa-eye"></i> Generar QR de Asistencia</button>
+                  </div>
+                  <div id="tab-attendees" class="tab-content">
+                      <h3>Lista de Participantes</h3>
+                      <table id="participant-list-table">
+                          <thead><tr><th>Nombre</th><th>DNI</th><th>Estado</th><th>Acciones</th></tr></thead>
+                          <tbody></tbody>
+                      </table>
+                  </div>
+              </div>
+          </section>
+
+          <section id="view-asistencia" class="view-container">
+            <h2>Tomar Asistencia</h2>
+            <p>Esta sección permitirá escanear el QR y registrar la asistencia.</p>
+          </section>
+      </main>
+    </div>
+  </div>
+  
+  <!-- [ MODALES ] -->
+  <div class="modal-overlay" id="qr-modal">
+      <div class="modal-content">
+          <div class="modal-body">
+              <h3 id="qr-modal-title"></h3>
+              <div id="qrcode-container"></div>
+          </div>
+          <div class="modal-footer" style="justify-content: center;">
+             <button class="btn btn-primary close-modal-btn">Cerrar</button>
+          </div>
+      </div>
+  </div>
+
+  <div class="modal-overlay" id="create-course-modal">
+      <div class="modal-content">
+          <h2 id="create-modal-title">Crear Nueva Cohorte (Paso 1 de 4)</h2>
+          <div class="modal-body">
+              
+              <div id="modal-step-1" class="modal-step active">
+                  <h3>Buscar Evento Existente</h3>
+                  <div class="form-group">
+                      <label for="course-search">Nombre del evento</label>
+                      <input type="search" id="course-search" placeholder="Escribe para buscar...">
+                  </div>
+                  <button id="search-event-btn" class="btn btn-primary">Buscar</button>
+                  <div id="course-search-results" style="margin-top: 16px;"></div>
+                  <hr style="margin: 20px 0;">
+                  <button id="create-new-event-btn" class="btn btn-secondary">O Crear un Evento Nuevo</button>
+              </div>
+
+              <div id="modal-step-2a" class="modal-step">
+                  <h3>Añadir Fecha a "<span id="existing-event-name"></span>"</h3>
+                  <div class="form-group">
+                      <label for="cohort-date">Fecha de la nueva cohorte</label>
+                      <input type="date" id="cohort-date">
+                  </div>
+              </div>
+              
+              <div id="modal-step-2b" class="modal-step">
+                  <h3>Información del Nuevo Evento</h3>
+                  <div class="form-group">
+                      <label for="new-course-name">Nombre del curso</label>
+                      <input type="text" id="new-course-name" placeholder="Ej: Taller de Oratoria">
+                  </div>
+                  <div class="form-group">
+                      <label for="new-course-date">Fecha de la primera cohorte</label>
+                      <input type="date" id="new-course-date">
+                  </div>
+              </div>
+
+              <div id="modal-step-3" class="modal-step">
+                  <h3>Inscripción de Participantes</h3>
+                  <div class="form-group">
+                      <label for="participants-textarea"><strong>Opción 1:</strong> Pega la lista de participantes aquí</label>
+                      <p style="font-size: 0.8rem; margin-bottom: 8px;">Formato: <strong>Nombre Apellido, DNI</strong> (uno por línea)</p>
+                      <textarea id="participants-textarea" placeholder="Juan Perez, 12345678&#10;Maria Gonzalez, 87654321"></textarea>
+                  </div>
+                  <p style="font-size: 1.2rem; text-align: center; margin: 16px 0;"><strong>O</strong></p>
+                  <div class="form-group">
+                      <label><strong>Opción 2:</strong> Carga un archivo CSV</label>
+                      <p style="font-size: 0.8rem; margin-bottom: 8px;">El archivo debe tener 2 columnas: <strong>Nombre,DNI</strong> (puede tener cabecera)</p>
+                      <label for="participants-csv-input" class="btn btn-secondary">
+                          <i class="fas fa-file-csv"></i> Cargar desde archivo CSV
+                      </label>
+                      <input type="file" id="participants-csv-input" accept=".csv" style="display: none;">
+                  </div>
+              </div>
+
+              <div id="modal-step-4" class="modal-step">
+                  <h3>Confirmación</h3>
+                  <div style="text-align: left;">
+                      <p><strong>Evento:</strong> <span id="confirmation-course-name"></span></p>
+                      <p><strong>Fecha de la Cohorte:</strong> <span id="confirmation-course-date"></span></p>
+                      <p><strong>Participantes a inscribir:</strong> <span id="confirmation-participant-count"></span></p>
+                      <div id="confirmation-participant-list"></div>
+                  </div>
+              </div>
+          </div>
+
+          <div class="modal-footer">
+              <button class="btn btn-secondary" id="modal-prev-btn" style="visibility: hidden;">Anterior</button>
+              <div>
+                  <button class="btn btn-secondary close-modal-btn">Cancelar</button>
+                  <button class="btn btn-primary" id="modal-next-btn" style="display:none;">Siguiente</button>
+                  <button class="btn btn-primary" id="modal-create-btn" style="display: none;">Crear y Publicar Cohorte</button>
+              </div>
+          </div>
+      </div>
+  </div>
+  
+  <script src="script.js"></script>
+</body>
+</html>
