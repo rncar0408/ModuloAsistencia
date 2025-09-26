@@ -121,7 +121,7 @@ th { font-weight: 600; color: var(--color-text-secondary); }
     padding: var(--spacing-3) !important; 
 }
 .swal2-title.custom-swal-title { 
-    font-size: 1.75rem !important; 
+    font-size: 1.75rem !important;  
     font-weight: 600 !important; 
     color: var(--color-text-primary) !important; 
     margin: 0 0 8px 0 !important; 

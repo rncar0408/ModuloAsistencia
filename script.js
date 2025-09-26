@@ -212,7 +212,7 @@ document.addEventListener('DOMContentLoaded', () => {
             course.dates.forEach(date => { rowHtml += `<button class="btn btn-primary btn-sm mark-attendance-btn" data-date="${date}" title="Marcar presente para ${new Date(date + 'T00:00:00').toLocaleDateString()}">P</button>`; });
             rowHtml += `<button class="btn btn-success btn-sm save-note-btn" title="Guardar nota"><i class="fas fa-save"></i></button></td></tr>`;
             return rowHtml;
-        }).join('');
+        }).join(''); 
     }
 
     function renderCourseDetail(courseId) {
