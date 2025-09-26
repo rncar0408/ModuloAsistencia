@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <link rel="icon" href="/favicon.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Asistencia - InscribCórdoba</title>
+
+  <!-- [ ESTILOS EXTERNOS ] -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+  
+  <!-- [ LIBRERÍAS ADICIONALES ] -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  
+  <!-- [ ESTILOS PROPIOS ] -->
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="maqueta-base.css">
+  <link rel="stylesheet" href="asistencia.css"> <!-- <-- HOJA DE ESTILOS DEDICADA -->
+  
+</head>
+<body>
+
+  <main class="asistencia-container">
+    <div class="card">
+        <div style="text-align: center; margin-bottom: 24px;">
+            <h1 class="MuiTypography-root MuiTypography-h5" style="color: var(--color-primary);">InscribCórdoba</h1>
+            <h2 style="margin: 0;">Registro de Asistencia</h2>
+            <p style="margin-top: 5px; color: #666;">Busca al asistente por CUIL para marcar su presencia.</p>
+        </div>
+
+        <div class="form-group">
+            <label for="asistencia-course-select">Selecciona el curso</label>
+            <select id="asistencia-course-select" class="form-control">
+                <option value="">-- Por favor, elija un curso --</option>
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label for="asistencia-cuil-input">Ingresá el CUIL del asistente</label>
+            <input type="text" id="asistencia-cuil-input" class="form-control" placeholder="Número de CUIL sin guiones">
+        </div>
+
+        <button id="asistencia-search-btn" class="btn btn-primary" style="width: 100%; padding: 12px; margin-top: 10px;">
+            <i class="fas fa-search"></i> Buscar Asistente
+        </button>
+        
+        <div style="text-align: center; margin-top: 20px;">
+            <a href="index.html" class="btn btn-secondary">
+                <i class="fas fa-arrow-left"></i> Volver al Panel Principal
+            </a>
+        </div>
+    </div>
+  </main>
+  
+  <script src="asistencia.js"></script> <!-- <-- SCRIPT DEDICADO -->
+</body>
+</html>

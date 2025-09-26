@@ -1,0 +1,47 @@
+/* --- Estilos para la página de asistencia (asistencia.css) --- */
+
+body {
+    display: grid;
+    place-items: center; /* Centra el contenido vertical y horizontalmente */
+    min-height: 100vh;
+    margin: 0;
+    background-color: #f4f6f8;
+    font-family: 'Inter', sans-serif;
+}
+
+.asistencia-container {
+    max-width: 500px;
+    width: 100%;
+    padding: 20px;
+    box-sizing: border-box;
+}
+
+/* 
+  Hereda el estilo de .card de style.css, 
+  pero podemos añadir ajustes si es necesario.
+*/
+
+.form-group {
+    margin-bottom: 1.5rem; /* Aumenta el espacio entre campos */
+}
+
+/* 
+  Asegura que los inputs y selects se vean bien 
+  y ocupen todo el ancho disponible.
+*/
+.form-control {
+    width: 100%;
+    padding: 12px;
+    font-size: 1rem;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    margin-top: 5px;
+    box-sizing: border-box;
+    transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.form-control:focus {
+    border-color: var(--color-primary);
+    box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.25);
+    outline: none;
+}
