@@ -239,7 +239,7 @@ document.addEventListener('DOMContentLoaded', () => {
         // Construye la URL para el QR.
         // `window.location.origin` obtiene "http://127.0.0.1:5500" o "https://inscribcordoba.com"
         // Luego agregamos la ruta a asistenciaalumno.html y el parámetro.
-        const qrUrl = `${window.location.origin}/asistenciaalumno.html?nroEvento=${course.nroEvento}`; 
+        const qrUrl = `${window.location.origin}/asistenciaAlumno.html?nroEvento=${course.nroEvento}`; 
 
         new QRCode(document.getElementById('qrcode-container'), {
             text: qrUrl,
