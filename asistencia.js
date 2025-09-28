@@ -54,14 +54,14 @@ document.addEventListener('DOMContentLoaded', () => {
     function getTodayDateString() {
         const today = new Date();
         return `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}-${String(today.getDate()).padStart(2, '0')}`;
-        // --- PARA PROBAR FECHAS FUTURAS: DESCOMENTA Y MODIFICA ESTA LÍNEA ---
+        // --- PARA PROBAR FECHAS FUTURAS: DESCOMENTAR Y MODIFICAR ESTA LÍNEA ---
         // return '2025-09-26'; 
     }
 
     function getFormattedTodayDate() {
         const today = new Date();
         return today.toLocaleDateString('es-AR', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
-        // --- PARA PROBAR FECHAS FUTURAS: DESCOMENTA Y MODIFICA ESTA LÍNEA ---
+        // --- PARA PROBAR FECHAS FUTURAS: DESCOMENTAR Y MODIFICAR ESTA LÍNEA ---
         // return 'viernes, 26 de septiembre de 2025';
     }
 
@@ -87,7 +87,6 @@ document.addEventListener('DOMContentLoaded', () => {
         console.log('--- Iniciando processAsistencia ---');
         const urlParams = new URLSearchParams(window.location.search);
         const nroEventoParam = urlParams.get('nroEvento');
-        // Eliminamos la lectura de cuilParam de la URL
 
         const statusMessageDiv = document.getElementById('status-message');
         statusMessageDiv.innerHTML = '<p>Verificando datos de curso...</p>';
@@ -127,14 +126,13 @@ document.addEventListener('DOMContentLoaded', () => {
                 cuilParam = swalCuil;
             } else {
                 statusMessageDiv.innerHTML = '<p class="alert alert-secondary">Registro de asistencia cancelado por el usuario.</p>';
-                return; // Salir de la función si el usuario cancela
+                return; 
             }
         } catch (error) {
             console.error("Error al solicitar CUIL con SweetAlert:", error);
             statusMessageDiv.innerHTML = '<p class="alert alert-danger">Error al solicitar el CUIL. Intente nuevamente.</p>';
             return Swal.fire('Error', 'Ocurrió un problema al solicitar el CUIL.', 'error');
         }
-        // =================================================================
 
         const cuilClean = cuilParam.replace(/[-\s.]/g, '');
         const todayString = getTodayDateString();
@@ -224,11 +222,7 @@ document.addEventListener('DOMContentLoaded', () => {
             Swal.fire({ title: 'Buscando...', text: 'Asistente no inscripto. Consultando sistema externo...', didOpen: () => Swal.showLoading() });
             
             try {
-                // =================================================================
-                //           SECCIÓN DE LA API - COMPLETAMENTE ACTUALIZADA
-                // =================================================================
-                
-                const keyApp = "7978615148664C41784C38614E5A7559"; // Este valor no se envía, se usa para generar el token
+                const keyApp = "7978615148664C41784C38614E5A7559"; 
                 const timeStamp = getTimeStamp();
                 const tokenValue = await generateBrowserToken(timeStamp, keyApp);
                 const apiUrl = 'https://cuentacidi.test.cba.gov.ar/api/Usuario/Obtener_Usuario';
@@ -310,5 +304,5 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // --- EJECUCIÓN INICIAL ---
     loadStateFromLocalStorage();
-    processAsistencia(); // Llama a la función de procesamiento al cargar la página
+    processAsistencia(); 
 });

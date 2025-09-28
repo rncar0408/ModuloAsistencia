@@ -133,13 +133,13 @@ body::backdrop{background-color:#fff;}
 
 /* Estilos para el sidebar colapsable */
 #sidebar {
-    width: 240px; /* Ancho por defecto del sidebar */
+    width: 240px; 
     transition: width 0.3s ease-in-out;
-    position: fixed; /* Asegura que no se mueva al hacer scroll */
-    height: 100vh; /* Altura completa de la ventana */
-    top: 64px; /* Ajusta según la altura de tu header */
+    position: fixed; 
+    height: 100vh;
+    top: 64px; 
     left: 0;
-    z-index: 1000; /* Asegura que esté sobre otros elementos */
+    z-index: 1000; 
 }
 
 #sidebar.collapsed {

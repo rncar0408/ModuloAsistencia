@@ -115,10 +115,6 @@ document.addEventListener('DOMContentLoaded', () => {
         Swal.fire({ title: 'Buscando...', text: 'Asistente no inscripto. Consultando sistema externo...', didOpen: () => Swal.showLoading() });
         
         try {
-            // =================================================================
-            //           SECCIÓN DE LA API - COMPLETAMENTE ACTUALIZADA
-            // =================================================================
-            
             // 1. Datos necesarios para la autenticación y la petición
             const keyApp = "7978615148664C41784C38614E5A7559"; // Este valor no se envía, se usa para generar el token
             const timeStamp = getTimeStamp();
@@ -149,7 +145,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
             const data = await response.json();
 
-            // 4. Verificación de la respuesta de la API (esta parte ya era compatible)
+            // 4. Verificación de la respuesta de la API 
             if (data.Respuesta.CodigoError) {
                 throw new Error(data.Respuesta.Resultado || 'La API devolvió un error desconocido.');
             }

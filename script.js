@@ -236,9 +236,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
         document.getElementById('qrcode-container').innerHTML = '';
         
-        // Construye la URL para el QR.
-        // `window.location.origin` obtiene "http://127.0.0.1:5500" o "https://inscribcordoba.com"
-        // Luego agregamos la ruta a asistenciaalumno.html y el parámetro.
         const qrUrl = `${window.location.origin}/ModuloAsistencia/asistenciaAlumno.html?nroEvento=${course.nroEvento}`; 
 
         new QRCode(document.getElementById('qrcode-container'), {
@@ -251,7 +248,6 @@ document.addEventListener('DOMContentLoaded', () => {
     }
     function closeModal() { document.querySelectorAll('.modal-overlay').forEach(m => m.classList.remove('visible')); }
 
-    // --- EVENT LISTENER PRINCIPAL ---
     document.body.addEventListener('click', e => {
         const target = e.target;
         const navLink = target.closest('[data-view]'); if (navLink) { e.preventDefault(); showView(navLink.dataset.view); if (navLink.dataset.view === 'courses') renderCourseList(); }
@@ -279,7 +275,6 @@ document.addEventListener('DOMContentLoaded', () => {
         if (target.id === 'clear-filter-btn') { document.getElementById('participant-filter-input').value = ''; appState.currentFilter = ''; renderParticipantList(appState.currentCourseId); }
     });
 
-    // Listener para el filtro en tiempo real
     document.getElementById('participant-filter-input').addEventListener('keyup', (e) => { appState.currentFilter = e.target.value; renderParticipantList(appState.currentCourseId); });
 
     // --- INICIALIZACIÓN ---
