@@ -1,23 +1,8 @@
 /* --- Estilos para la página de asistencia (asistencia.css) --- */
 
-body {
-    display: grid;
-    place-items: center; /* Centra el contenido vertical y horizontalmente */
-    min-height: 100vh;
-    margin: 0;
-    background-color: #f4f6f8;
-    font-family: 'Inter', sans-serif;
-}
 
-.asistencia-container {
-    max-width: 500px;
-    width: 100%;
-    padding: 20px;
-    box-sizing: border-box;
-} 
-
-/* 
-  Hereda el estilo de .card de style.css, 
+/*
+  Hereda el estilo de .card de style.css,
   pero podemos añadir ajustes si es necesario.
 */
 
@@ -25,8 +10,8 @@ body {
     margin-bottom: 1.5rem; /* Aumenta el espacio entre campos */
 }
 
-/* 
-  Asegura que los inputs y selects se vean bien 
+/*
+  Asegura que los inputs y selects se vean bien
   y ocupen todo el ancho disponible.
 */
 .form-control {
@@ -44,4 +29,94 @@ body {
     border-color: var(--color-primary);
     box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.25);
     outline: none;
+}
+
+/* Estilos para los botones en columnas */
+.button-group {
+    display: flex;
+    flex-wrap: wrap; /* Permite que los elementos se envuelvan en pantallas pequeñas */
+    gap: 10px; /* Espacio entre los botones */
+    margin-top: 20px;
+}
+
+.button-group .col-6 {
+    flex: 1 1 calc(50% - 5px); /* Ocupa el 50% del ancho menos la mitad del gap */
+    max-width: calc(50% - 5px); /* Asegura que no crezca más allá del 50% */
+    text-align: center; /* Centra el texto dentro de la columna */
+}
+
+/* Asegura que los botones dentro de las columnas ocupen todo el ancho */
+.button-group .col-6 .btn {
+    width: 100%;
+    display: flex; /* Permite centrar el icono y el texto */
+    justify-content: center; /* Centra horizontalmente */
+    align-items: center; /* Centra verticalmente */
+    gap: 8px; /* Espacio entre el icono y el texto */
+}
+
+/* Para pantallas más pequeñas, los botones pueden ocupar el 100% del ancho */
+@media (max-width: 768px) {
+    .button-group .col-6 {
+        flex: 1 1 100%;
+        max-width: 100%;
+    }
+}
+/* --- Estilos para la página de asistencia (asistencia.css) --- */
+
+.form-group {
+    margin-bottom: 1.5rem; /* Aumenta el espacio entre campos */
+}
+
+.form-control {
+    width: 100%;
+    padding: 12px;
+    font-size: 1rem;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    margin-top: 5px;
+    box-sizing: border-box;
+    transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.form-control:focus {
+    border-color: var(--color-primary);
+    box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.25);
+    outline: none;
+}
+
+/* Contenedor para los botones, usando flexbox */
+.button-group {
+    display: flex;
+    flex-wrap: wrap; /* Permite que los elementos se envuelvan en pantallas pequeñas */
+    gap: 15px; /* Espacio entre los botones */
+    margin-top: 20px;
+    justify-content: space-between; /* Distribuye los elementos con espacio entre ellos */
+}
+
+.button-group .btn {
+    flex: 1; /* Permite que ambos botones crezcan y se encojan */
+    min-width: 180px; /* Asegura un tamaño mínimo para que no se vean muy pequeños */
+    padding: 12px;
+    text-align: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 8px; /* Espacio entre el icono y el texto */
+    text-decoration: none; /* Para el <a> que actúa como botón */
+    color: inherit; /* Hereda el color del texto para el <a> */
+}
+
+/* Estilos específicos para los botones para asegurar el mismo alto */
+#asistencia-search-btn,
+.button-group a.btn-secondary {
+    height: 48px; /* Alto fijo para ambos botones */
+    line-height: normal; /* Asegura que el texto se alinee bien verticalmente */
+}
+
+/* Responsive adjustments for buttons */
+@media (max-width: 768px) {
+    .button-group {
+        flex-direction: column; /* Apila los botones verticalmente en pantallas pequeñas */
+        align-items: stretch; /* Estira los botones para ocupar todo el ancho */
+    }
 }

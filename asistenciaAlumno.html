@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <link rel="icon" href="/favicon.png"> <!-- Asegúrate de tener este archivo o quítalo -->
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Asistencia - InscribCórdoba</title>
+
+  <!-- [ ESTILOS EXTERNOS ] -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+  
+  <!-- [ LIBRERÍAS ADICIONALES ] -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  
+  <!-- [ ESTILOS PROPIOS ] -->
+  <!-- Puedes mantener estos links si tienes archivos CSS externos, de lo contrario, el siguiente bloque <style> es suficiente. -->
+  <!-- <link rel="stylesheet" href="style.css"> -->
+  <!-- <link rel="stylesheet" href="maqueta-base.css"> -->
+  <!-- <link rel="stylesheet" href="asistencia.css"> -->
+  
+  <style>
+    /* Estilos base para simular la estructura si no se usan archivos CSS externos */
+    body {
+      font-family: 'Inter', sans-serif;
+      background-color: #f0f2f5;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      margin: 0;
+      color: #333;
+    }
+    .asistencia-container {
+      max-width: 500px;
+      width: 100%;
+      padding: 20px;
+    }
+    .card {
+      background-color: #fff;
+      border-radius: 8px;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+      padding: 30px;
+      text-align: center;
+    }
+    .MuiTypography-h5 {
+      font-size: 1.5rem;
+      font-weight: 700;
+      margin-bottom: 10px;
+    }
+    h2 {
+      font-size: 1.25rem;
+      font-weight: 600;
+      margin-top: 10px;
+    }
+    p {
+      font-size: 0.95rem;
+      line-height: 1.5;
+    }
+
+    /* Estilos básicos para las alertas de SweetAlert si no usas Bootstrap directamente */
+    .alert {
+      padding: 1rem;
+      margin-bottom: 1rem;
+      border: 1px solid transparent;
+      border-radius: 0.25rem;
+      text-align: left; /* Para que las listas y el texto se alineen bien */
+      font-size: 0.9rem;
+    }
+    .alert-danger {
+      color: #721c24;
+      background-color: #f8d7da;
+      border-color: #f5c6cb;
+    }
+    .alert-warning {
+      color: #856404;
+      background-color: #fff3cd;
+      border-color: #ffeeba;
+    }
+    .alert-info {
+      color: #0c5460;
+      background-color: #d1ecf1;
+      border-color: #bee5eb;
+    }
+    .alert-success {
+        color: #155724;
+        background-color: #d4edda;
+        border-color: #c3e6cb;
+    }
+    .alert-secondary {
+        color: #383d41;
+        background-color: #e2e3e5;
+        border-color: #d6d8db;
+    }
+  </style>
+</head>
+<body>
+
+  <main class="asistencia-container">
+    <div class="card">
+        <div style="text-align: center; margin-bottom: 24px;">
+            <h1 class="MuiTypography-root MuiTypography-h5" style="color: var(--color-primary, #007bff);">InscribCórdoba</h1>
+            <h2 style="margin: 0;">Registro de Asistencia</h2>
+        </div>
+        
+        <!-- Área para mensajes de estado y feedback al usuario -->
+        <div id="status-message" style="text-align: center; margin-top: 20px;">
+            <p>Iniciando proceso de verificación de asistencia...</p>
+        </div>
+    </div>
+  </main>
+  
+  <script src="asistencia.js"></script> <!-- <-- SCRIPT DEDICADO -->
+</body>
+</html>

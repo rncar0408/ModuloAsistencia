@@ -10,39 +10,59 @@ document.addEventListener('DOMContentLoaded', () => {
  
     // --- LÓGICA DE PERSISTENCIA ---
     function loadStateFromLocalStorage() {
+        console.log('--- Intentando cargar estado desde localStorage ---');
         try {
             const savedState = localStorage.getItem('inscribCordobaState');
+            console.log('Valor recuperado de localStorage para inscribCordobaState:', savedState);
+
             if (savedState) {
                 const parsedState = JSON.parse(savedState);
                 appState.courses = parsedState.courses || [];
                 appState.participants = parsedState.participants || {};
                 appState.nextParticipantId = parsedState.nextParticipantId || 1;
-                console.log('Estado cargado desde localStorage para la página de asistencia.');
+                console.log('Estado cargado con éxito desde localStorage.');
+                console.log('Cursos cargados:', appState.courses);
+                console.log('Participantes cargados:', appState.participants);
             } else {
-                console.warn('No se encontró estado en localStorage.');
+                console.warn('No se encontró estado en localStorage para la clave "inscribCordobaState". Asegúrese de haber cargado cursos previamente.');
             }
         } catch (error) {
-            console.error('Error al cargar el estado desde localStorage:', error);
-            Swal.fire('Error', 'No se pudieron cargar los datos de los cursos. Vuelva al panel principal e intente de nuevo.', 'error');
+            console.error('Error FATAL al cargar el estado desde localStorage:', error);
+            Swal.fire('Error', 'No se pudieron cargar los datos de los cursos. Contacte a administración o revise el localStorage.', 'error');
         }
+        console.log('--- Fin de la carga de estado ---');
     }
 
     function saveStateToLocalStorage() {
+        console.log('--- Intentando guardar estado en localStorage ---');
         try {
+            // Aseguramos que solo actualizamos las partes que maneja esta página (principalmente participants y nextParticipantId)
             const fullState = JSON.parse(localStorage.getItem('inscribCordobaState')) || {};
             fullState.participants = appState.participants;
             fullState.nextParticipantId = appState.nextParticipantId;
             localStorage.setItem('inscribCordobaState', JSON.stringify(fullState));
-            console.log('Estado actualizado en localStorage.');
+            console.log('Estado actualizado en localStorage con los participantes más recientes.');
+            console.log('Nuevo estado de participantes guardado:', appState.participants);
         } catch (error) {
             console.error('Error al guardar el estado en localStorage:', error);
+            // No mostramos Swal.fire aquí, ya que podría interrumpir el flujo si hay un error al guardar después de una operación exitosa.
         }
+        console.log('--- Fin del guardado de estado ---');
     }
 
-    // --- LÓGICA DE LA VISTA DE ASISTENCIA ---
+    // --- FUNCIONES UTILITARIAS ---
     function getTodayDateString() {
         const today = new Date();
         return `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}-${String(today.getDate()).padStart(2, '0')}`;
+        // --- PARA PROBAR FECHAS FUTURAS: DESCOMENTA Y MODIFICA ESTA LÍNEA ---
+        // return '2025-09-26'; 
+    }
+
+    function getFormattedTodayDate() {
+        const today = new Date();
+        return today.toLocaleDateString('es-AR', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
+        // --- PARA PROBAR FECHAS FUTURAS: DESCOMENTA Y MODIFICA ESTA LÍNEA ---
+        // return 'viernes, 26 de septiembre de 2025';
     }
 
     function getTimeStamp() {
@@ -62,136 +82,233 @@ document.addEventListener('DOMContentLoaded', () => {
         return hashArray.map(b => b.toString(16).padStart(2, '0')).join('').toUpperCase();
     }
     
-    function populateCourseSelect() {
-        const select = document.getElementById('asistencia-course-select');
-        if (appState.courses.length === 0) {
-            select.innerHTML = '<option value="">No hay cursos cargados</option>';
-            select.disabled = true;
-            document.getElementById('asistencia-search-btn').disabled = true;
-            return;
-        }
-        select.innerHTML = '<option value="">-- Por favor, elija un curso --</option>';
-        appState.courses.forEach(course => {
-            const option = document.createElement('option');
-            option.value = course.id;
-            option.textContent = `(${course.nroEvento}) ${course.name}`;
-            select.appendChild(option);
-        });
-    }
+    // --- LÓGICA DE PROCESAMIENTO DE ASISTENCIA (se ejecuta al cargar la página) ---
+    async function processAsistencia() {
+        console.log('--- Iniciando processAsistencia ---');
+        const urlParams = new URLSearchParams(window.location.search);
+        const nroEventoParam = urlParams.get('nroEvento');
+        // Eliminamos la lectura de cuilParam de la URL
 
-    async function handleAsistenciaSearch() {
-        const courseId = parseInt(document.getElementById('asistencia-course-select').value);
-        const cuil = document.getElementById('asistencia-cuil-input').value.replace(/[-\s.]/g, '');
+        const statusMessageDiv = document.getElementById('status-message');
+        statusMessageDiv.innerHTML = '<p>Verificando datos de curso...</p>';
 
-        if (!courseId) { return Swal.fire('Atención', 'Debes seleccionar un curso.', 'warning'); }
-        if (!cuil || !/^\d{11}$/.test(cuil)) { return Swal.fire('Atención', 'Debes ingresar un CUIL válido de 11 dígitos.', 'warning'); }
+        console.log(`Parámetros de URL recibidos: nroEvento=${nroEventoParam}`);
 
-        const course = appState.courses.find(c => c.id === courseId);
-        const participants = appState.participants[courseId] || [];
-        const today = getTodayDateString();
-
-        if (!course.dates.includes(today)) {
-            return Swal.fire('Fuera de Fecha', `Hoy (${new Date(today+'T00:00:00').toLocaleDateString()}) no es una fecha de cursado para "${course.name}".`, 'error');
-        }
-        
-        const existingParticipant = participants.find(p => p.cuil.replace(/[-\s.]/g, '') === cuil);
-
-        if (existingParticipant) {
-            if (existingParticipant.attendance[today] === 1) {
-                return Swal.fire('Ya Registrado', `${existingParticipant.name} ya tiene la asistencia marcada como 'Presente' para hoy.`, 'info');
-            }
-            const { isConfirmed } = await Swal.fire({
-                title: 'Confirmar Asistencia', html: `¿Dar <b>Presente</b> a <br><b>${existingParticipant.name}</b>?`, icon: 'question',
-                showCancelButton: true, confirmButtonText: 'Sí, dar presente', cancelButtonText: 'Cancelar'
-            });
-            if (isConfirmed) {
-                existingParticipant.attendance[today] = 1;
-                saveStateToLocalStorage();
-                Toast.fire({ icon: 'success', title: '¡Asistencia registrada!' });
-            }
-            return;
+        if (!nroEventoParam) {
+            statusMessageDiv.innerHTML = '<p class="alert alert-danger">Error: Falta el número de evento en la URL. Contacte a administración.</p>';
+            return Swal.fire('Error', 'Faltan parámetros (nroEvento) en la URL.', 'error');
         }
 
-        Swal.fire({ title: 'Buscando...', text: 'Asistente no inscripto. Consultando sistema externo...', didOpen: () => Swal.showLoading() });
-        
+        // =================================================================
+        //           SOLICITAR CUIL AL USUARIO AL INICIO
+        // =================================================================
+        let cuilParam;
         try {
-            // =================================================================
-            //           SECCIÓN DE LA API - COMPLETAMENTE ACTUALIZADA
-            // =================================================================
-            
-            // 1. Datos necesarios para la autenticación y la petición
-            const keyApp = "7978615148664C41784C38614E5A7559"; // Este valor no se envía, se usa para generar el token
-            const timeStamp = getTimeStamp();
-            const tokenValue = await generateBrowserToken(timeStamp, keyApp);
-            const apiUrl = 'https://cuentacidi.test.cba.gov.ar/api/Usuario/Obtener_Usuario';
-
-            // 2. Construcción del cuerpo (body) del POST con la estructura correcta
-            const requestBody = {
-                IdAplicacion: 704,
-                Contrasenia: "OLYZUXqhnj64515",
-                TokenValue: tokenValue,
-                TimeStamp: timeStamp,
-                CUIL: cuil,
-                CUILOperador: "20378513376",
-                HashCookieOperador: "74756B6D705031426F5A386B41336F4B484F39706E4B4C2F4F62493D"
-            };
-
-            // 3. Llamada fetch con la URL y el cuerpo correctos
-            const response = await fetch(apiUrl, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(requestBody)
+            const { value: swalCuil } = await Swal.fire({
+                title: 'Ingrese CUIL del participante',
+                input: 'text',
+                inputPlaceholder: 'Ej: 20-12345678-9',
+                inputValidator: (value) => {
+                    if (!value) {
+                        return 'Debe ingresar un CUIL';
+                    }
+                    const cleanValue = value.replace(/[-\s.]/g, '');
+                    if (!/^\d{11}$/.test(cleanValue)) {
+                        return 'El CUIL debe tener 11 dígitos numéricos.';
+                    }
+                },
+                allowOutsideClick: false,
+                allowEscapeKey: false,
+                showCancelButton: true,
+                cancelButtonText: 'Cancelar Asistencia',
             });
 
-            if (!response.ok) {
-                throw new Error(`Error del servidor: ${response.status} - ${response.statusText}`);
-            }
-
-            const data = await response.json();
-
-            // 4. Verificación de la respuesta de la API (esta parte ya era compatible)
-            if (data.Respuesta.CodigoError) {
-                throw new Error(data.Respuesta.Resultado || 'La API devolvió un error desconocido.');
-            }
-            
-            const { isConfirmed } = await Swal.fire({
-                title: 'Nuevo Asistente Encontrado', icon: 'info',
-                html: `<p>Se encontró a:</p>
-                       <ul style="text-align: left; list-style-position: inside;">
-                           <li><b>Nombre:</b> ${data.NombreFormateado}</li>
-                           <li><b>CUIL:</b> ${data.CuilFormateado}</li>
-                       </ul>
-                       <p>¿Inscribir a <b>"${course.name}"</b> y dar presente?</p>`,
-                showCancelButton: true, confirmButtonText: 'Sí, Inscribir y dar Presente', cancelButtonText: 'Cancelar'
-            });
-
-            if (isConfirmed) {
-                const newParticipant = {
-                    id: appState.nextParticipantId++,
-                    cuil: data.CUIL, name: data.NombreFormateado, reparticion: 'Inscripto en el día',
-                    localidad: data.Domicilio.Localidad || 'N/A', telefono: data.TelFormateado || data.CelFormateado || 'N/A', cargo: 'N/A',
-                    esEmpleadoPublico: 'N', attendance: {}, nota: ''
-                };
-                course.dates.forEach(date => { newParticipant.attendance[date] = 0; });
-                newParticipant.attendance[today] = 1;
-
-                if (!appState.participants[courseId]) {
-                    appState.participants[courseId] = [];
-                }
-                appState.participants[courseId].push(newParticipant);
-                
-                saveStateToLocalStorage();
-                Swal.fire('¡Éxito!', `${newParticipant.name} ha sido inscripto y su asistencia fue registrada.`, 'success');
+            if (swalCuil) {
+                cuilParam = swalCuil;
+            } else {
+                statusMessageDiv.innerHTML = '<p class="alert alert-secondary">Registro de asistencia cancelado por el usuario.</p>';
+                return; // Salir de la función si el usuario cancela
             }
         } catch (error) {
-            console.error("Error detallado en la búsqueda:", error);
-            Swal.fire('Error', `No se pudo completar la operación: ${error.message}`, 'error');
+            console.error("Error al solicitar CUIL con SweetAlert:", error);
+            statusMessageDiv.innerHTML = '<p class="alert alert-danger">Error al solicitar el CUIL. Intente nuevamente.</p>';
+            return Swal.fire('Error', 'Ocurrió un problema al solicitar el CUIL.', 'error');
         }
+        // =================================================================
+
+        const cuilClean = cuilParam.replace(/[-\s.]/g, '');
+        const todayString = getTodayDateString();
+        const formattedToday = getFormattedTodayDate();
+
+        console.log(`CUIL limpio: ${cuilClean}, Fecha de hoy (string): ${todayString}, Fecha de hoy (formateada): ${formattedToday}`);
+
+        // La validación del CUIL limpio ya se hizo en el inputValidator de SweetAlert
+        // if (!/^\d{11}$/.test(cuilClean)) {
+        //     statusMessageDiv.innerHTML = '<p class="alert alert-danger">Error: El CUIL proporcionado no es válido (debe tener 11 dígitos).</p>';
+        //     return Swal.fire('Error', 'El CUIL proporcionado no es válido.', 'error');
+        // }
+        
+        console.log('Buscando curso con nroEvento:', nroEventoParam);
+        console.log('Cursos disponibles en appState:', appState.courses); 
+
+        const course = appState.courses.find(c => c.nroEvento == nroEventoParam); 
+
+        // 1. Verificar si el curso existe
+        if (!course) {
+            console.error('Curso no encontrado en appState.courses para nroEvento:', nroEventoParam);
+            statusMessageDiv.innerHTML = `<p class="alert alert-danger">Error: El curso con número de evento <b>${nroEventoParam}</b> no existe en el registro. Contacte a administración.</p>`;
+            return Swal.fire({
+                title: 'Curso No Encontrado',
+                html: `<div class="alert alert-danger" role="alert">
+                           El curso con número de evento <b>${nroEventoParam}</b> no existe en el registro. Contacte a administración.
+                       </div>`,
+                icon: 'error'
+            });
+        }
+        console.log('Curso encontrado:', course);
+
+
+        // 2. Verificar si hay clase para la fecha actual
+        if (!course.dates.includes(todayString)) {
+            console.warn(`No hay clase para el curso ${course.name} en la fecha ${todayString}.`);
+            statusMessageDiv.innerHTML = `<p class="alert alert-warning">Advertencia: No hay clases para el curso <b>"${course.name}" (${course.nroEvento})</b> en la fecha de hoy (${formattedToday}). Contacte a administración.</p>`;
+            return Swal.fire({
+                title: 'Sin Clases Hoy',
+                html: `<div class="alert alert-warning" role="alert">
+                           No hay clases para el curso <b>"${course.name}" (${course.nroEvento})</b> en la fecha de hoy (${formattedToday}).<br>
+                           Contacte a administración si cree que es un error.
+                       </div>`,
+                icon: 'info'
+            });
+        }
+        console.log(`Clase encontrada para hoy (${todayString}) en el curso "${course.name}".`);
+
+
+        // 3. Buscar participante en el registro local del curso
+        const participantsInCourse = appState.participants[course.id] || [];
+        console.log(`Buscando CUIL ${cuilClean} en los participantes del curso ${course.id}:`, participantsInCourse);
+
+        const existingParticipant = participantsInCourse.find(p => p.cuil.replace(/[-\s.]/g, '') === cuilClean);
+
+        if (existingParticipant) {
+            console.log('Participante encontrado localmente:', existingParticipant.name);
+            // El participante ya está inscrito en este curso
+            if (existingParticipant.attendance[todayString] === 1) {
+                // Ya tiene asistencia marcada para hoy
+                statusMessageDiv.innerHTML = `<p class="alert alert-info">¡Asistencia ya registrada! <b>${existingParticipant.name}</b> ya tiene el presente para hoy en el curso <b>"${course.name}"</b>.</p>`;
+                return Swal.fire('Ya Registrado', `${existingParticipant.name} ya tiene la asistencia marcada como 'Presente' para hoy en el curso "${course.name}".`, 'info');
+            } else {
+                // Participante encontrado, tiene clase hoy, pero no asistencia marcada.
+                statusMessageDiv.innerHTML = `<p class="alert alert-info">Listo para registrar asistencia a <b>${existingParticipant.name}</b> en <b>"${course.name}"</b> para <b>${formattedToday}</b>.</p>`;
+                const { isConfirmed } = await Swal.fire({
+                    title: 'Confirmar Asistencia',
+                    html: `¿Dar <b>Presente</b> a <br><b>${existingParticipant.name}</b><br> para el curso <b>"${course.name}" (${course.nroEvento})</b> en la fecha <b>${formattedToday}</b>?`,
+                    icon: 'question',
+                    showCancelButton: true,
+                    confirmButtonText: 'Sí, dar presente',
+                    cancelButtonText: 'Cancelar'
+                });
+                if (isConfirmed) {
+                    existingParticipant.attendance[todayString] = 1;
+                    saveStateToLocalStorage();
+                    statusMessageDiv.innerHTML = `<p class="alert alert-success">¡Asistencia registrada con éxito para <b>${existingParticipant.name}</b> en <b>"${course.name}"</b>!</p>`;
+                    Toast.fire({ icon: 'success', title: '¡Asistencia registrada!' });
+                } else {
+                    statusMessageDiv.innerHTML = `<p class="alert alert-secondary">Registro de asistencia cancelado por el usuario.</p>`;
+                }
+            }
+        } else {
+            // Participante no encontrado en el registro local. Intentar buscar en API externa.
+            console.log('Participante no encontrado localmente. Consultando API externa...');
+            statusMessageDiv.innerHTML = `<p>Asistente no inscripto localmente. Consultando sistema externo para el CUIL <b>${cuilClean}</b>...</p>`;
+            Swal.fire({ title: 'Buscando...', text: 'Asistente no inscripto. Consultando sistema externo...', didOpen: () => Swal.showLoading() });
+            
+            try {
+                // =================================================================
+                //           SECCIÓN DE LA API - COMPLETAMENTE ACTUALIZADA
+                // =================================================================
+                
+                const keyApp = "7978615148664C41784C38614E5A7559"; // Este valor no se envía, se usa para generar el token
+                const timeStamp = getTimeStamp();
+                const tokenValue = await generateBrowserToken(timeStamp, keyApp);
+                const apiUrl = 'https://cuentacidi.test.cba.gov.ar/api/Usuario/Obtener_Usuario';
+
+                const requestBody = {
+                    IdAplicacion: 704,
+                    Contrasenia: "OLYZUXqhnj64515",
+                    TokenValue: tokenValue,
+                    TimeStamp: timeStamp,
+                    CUIL: cuilClean,
+                    CUILOperador: "20378513376", 
+                    HashCookieOperador: "74756B6D705031426F5A386b41336f4B484F39706e4B4C2F4F62493D"
+                };
+                console.log('Enviando petición a la API con body:', requestBody);
+
+                const response = await fetch(apiUrl, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(requestBody)
+                });
+                console.log('Respuesta de la API (raw):', response);
+
+                if (!response.ok) {
+                    throw new Error(`Error del servidor: ${response.status} - ${response.statusText}`);
+                }
+
+                const data = await response.json();
+                console.log('Datos de la API (parsed):', data);
+
+                if (data.Respuesta.CodigoError) {
+                    throw new Error(data.Respuesta.Resultado || 'La API devolvió un error desconocido.');
+                }
+                
+                Swal.close(); // Cerrar el SweetAlert de "Buscando..."
+                statusMessageDiv.innerHTML = `<p class="alert alert-info">Se encontró a <b>${data.NombreFormateado}</b> por CUIL. Listo para inscribir y registrar asistencia.</p>`;
+
+                const { isConfirmed } = await Swal.fire({
+                    title: 'Nuevo Asistente Encontrado', icon: 'info',
+                    html: `<p>Se encontró a:</p>
+                           <ul style="text-align: left; list-style-position: inside;">
+                               <li><b>Nombre:</b> ${data.NombreFormateado}</li>
+                               <li><b>CUIL:</b> ${data.CuilFormateado}</li>
+                           </ul>
+                           <p>¿Inscribir a <b>"${course.name}" (${course.nroEvento})</b> y dar presente para la fecha <b>${formattedToday}</b>?</p>`,
+                    showCancelButton: true, confirmButtonText: 'Sí, Inscribir y dar Presente', cancelButtonText: 'Cancelar'
+                });
+
+                if (isConfirmed) {
+                    const newParticipant = {
+                        id: appState.nextParticipantId++,
+                        cuil: data.CUIL, name: data.NombreFormateado, reparticion: data.Reparticion || 'Inscripto en el día',
+                        localidad: data.Domicilio?.Localidad || 'N/A', telefono: data.TelFormateado || data.CelFormateado || 'N/A', cargo: data.Cargo || 'N/A',
+                        esEmpleadoPublico: data.EsEmpleadoPublico ? 'S' : 'N', attendance: {}, nota: ''
+                    };
+                    // Inicializar asistencia para todas las fechas del curso
+                    course.dates.forEach(date => { newParticipant.attendance[date] = 0; });
+                    // Marcar asistencia para hoy
+                    newParticipant.attendance[todayString] = 1;
+
+                    if (!appState.participants[course.id]) {
+                        appState.participants[course.id] = [];
+                    }
+                    appState.participants[course.id].push(newParticipant);
+                    
+                    saveStateToLocalStorage();
+                    statusMessageDiv.innerHTML = `<p class="alert alert-success">¡Éxito! <b>${newParticipant.name}</b> ha sido inscripto en <b>"${course.name}"</b> y su asistencia fue registrada para hoy.</p>`;
+                    Swal.fire('¡Éxito!', `${newParticipant.name} ha sido inscripto en "${course.name}" y su asistencia fue registrada para hoy.`, 'success');
+                } else {
+                    statusMessageDiv.innerHTML = `<p class="alert alert-secondary">Inscripción y registro de asistencia cancelados por el usuario.</p>`;
+                }
+            } catch (error) {
+                console.error("Error detallado en la búsqueda de API:", error);
+                statusMessageDiv.innerHTML = `<p class="alert alert-danger">Error: No se pudo completar la operación de búsqueda externa: ${error.message}</p>`;
+                Swal.fire('Error', `No se pudo completar la operación de búsqueda externa: ${error.message}`, 'error');
+            }
+        }
+        console.log('--- Fin de processAsistencia ---');
     }
 
     // --- EJECUCIÓN INICIAL ---
     loadStateFromLocalStorage();
-    populateCourseSelect();
-
-    document.getElementById('asistencia-search-btn').addEventListener('click', handleAsistenciaSearch);
+    processAsistencia(); // Llama a la función de procesamiento al cargar la página
 });

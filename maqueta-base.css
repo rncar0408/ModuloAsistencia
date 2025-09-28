@@ -130,3 +130,100 @@ body::backdrop{background-color:#fff;}
 .css-1vx5ons-MuiTypography-root{margin:0;font-family:"Roboto","Helvetica","Arial",sans-serif;font-weight:400;font-size:1rem;line-height:1.5;letter-spacing:0.00938em;display:block;font-weight:600;font-size:0.95rem;}
 .css-119wstx-MuiListItemIcon-root{min-width:56px;color:rgba(0, 0, 0, 0.54);-webkit-flex-shrink:0;-ms-flex-negative:0;flex-shrink:0;display:-webkit-inline-box;display:-webkit-inline-flex;display:-ms-inline-flexbox;display:inline-flex;min-width:0;margin-right:24px;-webkit-box-pack:center;-ms-flex-pack:center;-webkit-justify-content:center;justify-content:center;color:rgba(0, 0, 0, 0.6);}
 .css-1xm7s47-MuiTypography-root{margin:0;font-family:"Roboto","Helvetica","Arial",sans-serif;font-weight:400;font-size:1rem;line-height:1.5;letter-spacing:0.00938em;display:block;font-weight:400;font-size:0.95rem;}
+
+/* Estilos para el sidebar colapsable */
+#sidebar {
+    width: 240px; /* Ancho por defecto del sidebar */
+    transition: width 0.3s ease-in-out;
+    position: fixed; /* Asegura que no se mueva al hacer scroll */
+    height: 100vh; /* Altura completa de la ventana */
+    top: 64px; /* Ajusta según la altura de tu header */
+    left: 0;
+    z-index: 1000; /* Asegura que esté sobre otros elementos */
+}
+
+#sidebar.collapsed {
+    width: 0;
+    overflow: hidden;
+}
+
+.main-content-wrapper {
+    margin-left: 240px; 
+    transition: margin-left 0.3s ease-in-out;
+    padding-top: 64px; 
+    width: calc(100% - 240px); 
+}
+
+.main-content-wrapper.shifted {
+    margin-left: 0;
+    width: 100%; 
+}
+
+header .MuiStack-root:first-child { 
+    transition: margin-left 0.3s ease-in-out;
+}
+
+#sidebar.collapsed ~ .main-content-wrapper header .MuiStack-root:first-child {
+    margin-left: 0;
+}
+
+#sidebar.collapsed .MuiListItemText-root {
+    display: none;
+}
+
+#sidebar.collapsed .MuiListItemIcon-root {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+}
+
+#sidebar.collapsed .css-1kh1mwg {
+    display: none;
+}
+#sidebar.collapsed .MuiDivider-root {
+    display: none;
+}
+
+
+@media (max-width: 900px) { 
+    #sidebar {
+        width: 0;
+        left: -240px; 
+    }
+    #sidebar.collapsed {
+        width: 0;
+        left: -240px;
+    }
+    .main-content-wrapper {
+        margin-left: 0;
+        width: 100%;
+    }
+    .main-content-wrapper.shifted { 
+      margin-left: 0;
+    }
+    #sidebar-toggle { 
+        display: block !important;
+    }
+}
+
+@media (max-width: 600px) {
+    #sidebar {
+        position: fixed;
+        top: 0; 
+        left: -240px; 
+        height: 100vh;
+        background-color: white; 
+        z-index: 1001;
+        box-shadow: 2px 0 5px rgba(0,0,0,0.2);
+    }
+    #sidebar.collapsed {
+        left: -240px; 
+    }
+    #sidebar.show { 
+        left: 0;
+    }
+    .main-content-wrapper {
+        margin-left: 0;
+        width: 100%;
+    }
+}

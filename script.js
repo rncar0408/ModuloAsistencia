@@ -230,7 +230,25 @@ document.addEventListener('DOMContentLoaded', () => {
     // --- LÓGICA DE NAVEGACIÓN Y MODALES ---
     function showView(viewId) { document.querySelectorAll('.view-container').forEach(v => v.classList.remove('active')); document.getElementById(`view-${viewId}`).classList.add('active'); document.querySelectorAll('.MuiListItemButton-root').forEach(i => i.classList.remove('Mui-selected')); const activeLink = document.querySelector(`[data-view="${viewId}"]`); if (activeLink) { activeLink.classList.add('Mui-selected'); const headerTitleEl = document.getElementById('header-title'); if (headerTitleEl) { const textSpan = activeLink.querySelector('.MuiListItemText-primary'); if (textSpan) headerTitleEl.textContent = textSpan.textContent.trim(); } } }
     function switchTab(tabId) { document.querySelectorAll('#view-course-detail .tab-content, #view-course-detail .tab-item').forEach(el => el.classList.remove('active')); document.getElementById(`tab-${tabId}`).classList.add('active'); document.querySelector(`.tab-item[data-tab="${tabId}"]`).classList.add('active'); }
-    function showQrModal(courseId) { const course = appState.courses.find(c => c.id === courseId); if (!course) return; document.getElementById('qrcode-container').innerHTML = ''; new QRCode(document.getElementById('qrcode-container'), { text: `https://inscribcordoba.com/asistencia?curso=${course.id}`, width: 256, height: 256 }); document.getElementById('qr-modal-title').textContent = `QR para: ${course.name}`; document.getElementById('qr-modal').classList.add('visible'); }
+        function showQrModal(courseId) {
+        const course = appState.courses.find(c => c.id === courseId);
+        if (!course) return;
+
+        document.getElementById('qrcode-container').innerHTML = '';
+        
+        // Construye la URL para el QR.
+        // `window.location.origin` obtiene "http://127.0.0.1:5500" o "https://inscribcordoba.com"
+        // Luego agregamos la ruta a asistenciaalumno.html y el parámetro.
+        const qrUrl = `${window.location.origin}/asistenciaalumno.html?nroEvento=${course.nroEvento}`; 
+
+        new QRCode(document.getElementById('qrcode-container'), {
+            text: qrUrl,
+            width: 256,
+            height: 256
+        });
+        document.getElementById('qr-modal-title').textContent = `QR para: ${course.name}`;
+        document.getElementById('qr-modal').classList.add('visible');
+    }
     function closeModal() { document.querySelectorAll('.modal-overlay').forEach(m => m.classList.remove('visible')); }
 
     // --- EVENT LISTENER PRINCIPAL ---
