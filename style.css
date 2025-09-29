@@ -67,7 +67,7 @@ th { font-weight: 600; color: var(--color-text-secondary); }
 @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 
 /* === MODALES (BASE DEL USUARIO) === */
-.modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.6); display: none; justify-content: center; align-items: center; z-index: 1000; }
+.modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.6); display: none; justify-content: center; align-items: center; z-index: 2000; }
 .modal-overlay.visible { display: flex; }
 .modal-content { background: white; padding: var(--spacing-4); border-radius: var(--border-radius); text-align: center; width: 90%; max-width: 600px; color: var(--color-text-primary); }
 #qrcode-container { padding: var(--spacing-2); border: 1px solid var(--color-border); margin: var(--spacing-2) auto var(--spacing-3); display: inline-block; }
@@ -82,74 +82,112 @@ th { font-weight: 600; color: var(--color-text-secondary); }
 .search-result-item { padding: 8px 12px; border: 1px solid #ddd; border-radius: 4px; margin-top: 8px; cursor: pointer; transition: background-color 0.2s; }
 .search-result-item:hover { background-color: #f0f0f0; }
 
-/************************************************************/
-/* === ESTILOS NUEVOS Y CORREGIDOS === */
-/************************************************************/
-
 /* === FILTROS Y NOTAS EN LA TABLA === */
 .filter-controls { display: flex; gap: 10px; margin-bottom: 16px; align-items: center; }
-.filter-controls input[type="search"] { 
-    width: 300px; 
-    padding: 10px 12px; 
-    border: 1px solid var(--color-border); 
-    border-radius: var(--border-radius); 
-    font-size: 0.95rem; 
-}
+.filter-controls input[type="search"] { width: 300px; padding: 10px 12px; border: 1px solid var(--color-border); border-radius: var(--border-radius); font-size: 0.95rem; }
 .filter-controls input[type="search"]:focus,
-.note-input:focus { 
-    outline: none; 
-    border-color: var(--color-primary); 
-    box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.25); 
-}
-.note-input { 
-    width: 70px; 
-    padding: 6px 8px; 
-    font-size: 0.9rem; 
-    text-align: center; 
-    border: 1px solid var(--color-border); 
-    border-radius: var(--border-radius); 
-}
+.note-input:focus { outline: none; border-color: var(--color-primary); box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.25); }
+.note-input { width: 70px; padding: 6px 8px; font-size: 0.9rem; text-align: center; border: 1px solid var(--color-border); border-radius: var(--border-radius); }
 
 /* === ESTRUCTURA DE DETALLES DEL CURSO === */
 .course-details-grid { display: grid; grid-template-columns: auto 1fr; gap: 8px 16px; align-items: center; max-width: 800px; }
 .course-details-grid dt { font-weight: bold; text-align: right; color: var(--color-text-secondary); }
 .course-details-grid dd { margin: 0; }
 
-/* === ESTILOS A PRUEBA DE ERRORES PARA EL MODAL DE SALA (SWEETALERT) === */
-.swal2-popup.custom-swal-popup { 
-    border-radius: var(--border-radius) !important; 
-    padding: var(--spacing-3) !important; 
+/* === SWEETALERT CUSTOM === */
+.swal2-popup.custom-swal-popup { border-radius: var(--border-radius) !important; padding: var(--spacing-3) !important; }
+.swal2-title.custom-swal-title { font-size: 1.75rem !important;  font-weight: 600 !important; color: var(--color-text-primary) !important; margin: 0 0 8px 0 !important; }
+.swal2-html-container.custom-swal-html { color: var(--color-text-secondary) !important; font-size: 0.95rem !important; line-height: 1.6 !important; margin: var(--spacing-2) 0 var(--spacing-3) 0 !important; text-align: center !important; }
+body .swal2-container .swal2-popup .swal2-input.custom-swal-input { border: 1px solid var(--color-border) !important; border-radius: var(--border-radius) !important; font-size: 1rem !important; height: 48px !important; width: 100% !important; max-width: 100% !important; box-sizing: border-box !important; padding: 10px 12px !important; margin: 0 !important; }
+body .swal2-container .swal2-popup .swal2-input.custom-swal-input:focus { border-color: var(--color-primary) !important; box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.25) !important; }
+.swal2-actions { margin-top: var(--spacing-3) !important; gap: 10px !important; }
+
+
+:root {
+    --sidebar-width: 260px;
+    --transition-speed: 225ms;
 }
-.swal2-title.custom-swal-title { 
-    font-size: 1.75rem !important;  
-    font-weight: 600 !important; 
-    color: var(--color-text-primary) !important; 
-    margin: 0 0 8px 0 !important; 
+
+/* --- AJUSTES BASE --- */
+.css-cyuviz-MuiButtonBase-root-MuiIconButton-root { display: inline-flex !important; }
+#sidebar-close-btn { color: rgba(0, 0, 0, 0.54); }
+.sidebar-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-right: 8px;
 }
-.swal2-html-container.custom-swal-html { 
-    color: var(--color-text-secondary) !important; 
-    font-size: 0.95rem !important; 
-    line-height: 1.6 !important; 
-    margin: var(--spacing-2) 0 var(--spacing-3) 0 !important; 
-    text-align: center !important; 
+
+/* --- TRANSICIONES SUAVES --- */
+#sidebar {
+    transition: transform var(--transition-speed) cubic-bezier(0.4, 0, 0.6, 1);
 }
-/* REGLA CORREGIDA Y MÁS ESPECÍFICA PARA EL INPUT DEL MODAL */
-body .swal2-container .swal2-popup .swal2-input.custom-swal-input {
-    border: 1px solid var(--color-border) !important;
-    border-radius: var(--border-radius) !important;
-    font-size: 1rem !important;
-    height: 48px !important;
-    width: 100% !important;
-    max-width: 100% !important; /* Evita que se encoja */
-    box-sizing: border-box !important;
-    padding: 10px 12px !important;
-    margin: 0 !important;
+#app-header, #main-content {
+    transition: margin-left var(--transition-speed) cubic-bezier(0.4, 0, 0.6, 1), 
+                width var(--transition-speed) cubic-bezier(0.4, 0, 0.6, 1);
 }
-body .swal2-container .swal2-popup .swal2-input.custom-swal-input:focus { 
-    border-color: var(--color-primary) !important; 
-    box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.25) !important; 
+
+/* --- BACKDROP (FONDO OSCURO) --- */
+.sidebar-backdrop {
+    position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    opacity: 0; visibility: hidden;
+    transition: opacity var(--transition-speed) ease, visibility var(--transition-speed) ease;
+    z-index: 1250;
 }
-.swal2-actions { 
-    margin-top: var(--spacing-3) !important; 
-    gap: 10px !important; 
+
+/* --- LÓGICA PARA PANTALLAS GRANDES (Desktop) --- */
+@media (min-width: 901px) {
+    .MuiBox-root[data-sidebar-state="expanded"] #sidebar {
+        transform: translateX(0);
+    }
+    .MuiBox-root[data-sidebar-state="expanded"] #app-header,
+    .MuiBox-root[data-sidebar-state="expanded"] #main-content {
+        margin-left: var(--sidebar-width);
+        width: calc(100% - var(--sidebar-width));
+    }
+
+    /* ESTADO COLAPSADO */
+    .MuiBox-root[data-sidebar-state="collapsed"] #sidebar {
+        transform: translateX(-100%);
+    }
+    .MuiBox-root[data-sidebar-state="collapsed"] #app-header,
+    .MuiBox-root[data-sidebar-state="collapsed"] #main-content {
+        margin-left: 0;
+        width: 100%;
+    }
+}
+
+/* --- LÓGICA PARA PANTALLAS PEQUEÑAS (Móvil) --- */
+@media (max-width: 900px) {
+    #sidebar {
+        position: fixed;
+        height: 100%;
+        transform: translateX(-100%);
+        z-index: 1300; 
+    }
+
+    /* En móvil, el contenido y el header SIEMPRE ocupan el 100% y no se mueven */
+    #app-header, #main-content {
+        margin-left: 0 !important;
+        width: 100% !important;
+    }
+
+    /* ESTADO EXPANDIDO (abierto) */
+    .MuiBox-root[data-sidebar-state="expanded"] #sidebar {
+        transform: translateX(0); 
+    }
+    .MuiBox-root[data-sidebar-state="expanded"] .sidebar-backdrop {
+        opacity: 1;
+        visibility: visible; 
+    }
+
+    /* ESTADO COLAPSADO (cerrado) */
+    .MuiBox-root[data-sidebar-state="collapsed"] #sidebar {
+        transform: translateX(-100%); 
+    }
+    .MuiBox-root[data-sidebar-state="collapsed"] .sidebar-backdrop {
+        opacity: 0;
+        visibility: hidden;
+    }
 }

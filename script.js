@@ -276,9 +276,20 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     document.getElementById('participant-filter-input').addEventListener('keyup', (e) => { appState.currentFilter = e.target.value; renderParticipantList(appState.currentCourseId); });
-
+    
     // --- INICIALIZACIÓN ---
     loadStateFromLocalStorage();
-    showView('dashboard');
+    
+    // ===== MODIFICACIÓN: Lee el parámetro de la URL para mostrar la vista correcta =====
+    const urlParams = new URLSearchParams(window.location.search);
+    const viewParam = urlParams.get('view');
+
+    if (viewParam === 'courses') {
+        showView('courses');
+        renderCourseList();
+    } else {
+        showView('dashboard');
+    }
+
     if (appState.courses.length > 0) { renderCourseList(); }
 });
